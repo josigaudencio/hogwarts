@@ -1,0 +1,19 @@
+    - name: Parando NGINX
+      service:
+        name: nginx
+        state: stopped
+      ignore_errors: True
+
+    - name: Removendo o nginx - like Debian
+      apt:
+        name: nginx
+        state: absent
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Removendo o nginx - like red hat
+      yum:
+        name: nginx
+        state: absent
+      when: ansible_os_family == "RedHat"
+

@@ -1,0 +1,10 @@
+    - name: Baixando RPM
+      command: rpm -Uvh https://yum.puppet.com/puppet5/puppet5-release-el-7.noarch.rpm
+      when: ansible_distribution == "CentOS"
+
+    - name: Baixando Xenial Deb
+      get_url: 
+        url: https://apt.puppetlabs.com/puppet5-release-xenial.deb
+        dest: /root/
+      when: ansible_distribution == "Ubuntu"
+

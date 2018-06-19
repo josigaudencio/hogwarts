@@ -1,0 +1,9 @@
+    - name: Instalando RPM - CentOS
+      yum: name=puppet5-release-el-7.noarch.rpm state=present
+      when: ansible_os_family == "RedHat"
+    
+    - name: Instalando Puppet-Agent - CentOS
+      yum: name=puppet-agent state=present 
+      when: ansible_os_family == "RedHat"
+
+  

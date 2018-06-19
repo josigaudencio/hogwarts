@@ -1,0 +1,69 @@
+---
+
+- name: Desafio
+  hosts: all
+  tasks:
+
+
+  - name: Parando Nginx
+    service:
+      name: nginx
+      state: stopped
+    ignore_erros: True
+
+  
+  - name: Remover Nginx - Ubuntu
+    apt: name=nginx state=absent update_cache=yes
+    when: ansible_distribution == "Ubuntu"
+    
+
+  - name: Remover Nginx - CentOS
+    yum:
+      name: nginx
+      state: absent
+    when: ansible_distribution == "CentOS"
+       
+
+  - name: Instalar libs - Ubuntu
+    apt: 
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+    - "apache2"
+    - "libapache2-mod-php7.0"
+    - "php7.0"
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Instalar libs - CentOS
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+    - "httpd"
+    - "php"
+    when: ansible_distribution == "CentOS"
+    notify: httpd
+
+  - name: habilitar modulo apache2 - ubuntu
+    command: a2enmod php7.0
+    notify: apache2
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: Envia arquivo
+    copy:
+      src: index.php
+      dest: /var/www/html/index.php
+   
+
+  handlers:
+    - name: apache2
+      service:
+        name: apache2
+        state: restarted
+    
+    - name: httpd
+      service:
+         name: httpd
+         state: restarted
